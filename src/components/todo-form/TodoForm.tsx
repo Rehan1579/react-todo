@@ -1,7 +1,15 @@
 import { FormEvent, forwardRef, useImperativeHandle, useState } from "react";
-import { ITodo } from "../../data-models/ITodo";
+import { ITodo } from "../../data-models/interfaces/ITodo";
+import "./TodoForm.scss";
 
-export const TodoForm = forwardRef((props: any, ref) => {
+
+interface Props {
+    saveTodo(todo: ITodo): void;
+}
+
+
+export const TodoForm = forwardRef((props: Props, ref) => {
+
     const {saveTodo} = props;
     const [title, setTitle] = useState<string>("");
 
@@ -41,9 +49,10 @@ export const TodoForm = forwardRef((props: any, ref) => {
 
     return (
         <form onSubmit={submitForm}>
-            <label htmlFor="title">Title</label>
-            <input type="text" id="title" required value={title} onChange={(e) => setTitle(e.target.value)}></input>
-            <button type="submit" disabled={!title}>Add</button>
+            <div className="form-input">
+                <input placeholder="Add Your Todo" type="text" id="title" required value={title} onChange={(e) => setTitle(e.target.value)}></input>
+                <button type="submit" disabled={!title}>Add</button>
+            </div>
         </form>
     );
 });
