@@ -21,6 +21,7 @@ const FormInput = styled.div`
         border-radius: 8px;
         font-size: 14px;
         outline: 2px solid transparrent;
+        flex-grow: 1;
 
         &:focus {
             outline: 2px solid #ccc;
@@ -90,7 +91,7 @@ export const TodoForm = forwardRef((props: Props, ref) => {
 
 
     return (
-        <form onSubmit={submitForm}>
+        <form onSubmit={submitForm} style={{margin: "12px"}}>
             <FormInput className={!isValid && 'invalid'}>
                 <input placeholder="Add Your Todo" type="text" id="title" required value={title} onChange={onChangeTitle}></input>
                 <button type="submit" disabled={!title}>Add</button>

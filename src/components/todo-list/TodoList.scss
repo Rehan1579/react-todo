@@ -1,9 +1,12 @@
 .todo-list {
     list-style-type: none;
     padding: 0;
-
+    height: calc(100% - 51px);
+    background: white;
+    margin: 0;
+    overflow-y: auto;
 
     &--empty {
-      text-align: center;
+        text-align: center;
     }
 }

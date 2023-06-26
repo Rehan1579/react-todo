@@ -25,11 +25,7 @@ a:hover {
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
-  justify-content: center;
+  height: 100vh;
   background-color: #f0f0f0;
 }
 
@@ -68,4 +64,14 @@ button:focus-visible {
   button {
     background-color: #f9f9f9;
   }
+}
+
+
+div#root {
+  height: 100%;
+}
+.todo {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
