@@ -1,46 +1,55 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { TodoService } from "./services/todo-service";
-import { ITodo } from "./data-models/ITodo";
+import { ITodo} from "./data-models/interfaces/ITodo";
 import { TodoList } from "./components/todo-list/TodoList";
 import { TodoForm } from "./components/todo-form/TodoForm";
-
+import { ITodoListContext, TodoContextController } from "./data-models/context/todo-context";
+import "./index.css";
 
 
 export function NewApp() {
 
     const [todos, setTodos] = useState<ITodo[]>([]);
-    
     const todoFormRef = useRef(null);
 
 
 
-    function removeTodo(id: string) {
+    const TodoListContext = TodoContextController.getContext();
+    const TodoListContextValue: ITodoListContext = {
+        removeTodo,
+        toggleTodo
+    };
+
+
+
+    function removeTodo(id: string | null) {
         
         const canDelete = confirm("Are you sure you want to remove the todo?");
-        if (!canDelete)
+        if (!canDelete || !id)
         {
             return;
         }
 
 
-        TodoService.removeTodo(id);
-        refreshTodo();
+        TodoService.removeTodo(id)
+            .then(() => refreshTodo());
     }
 
 
 
     function refreshTodo() {
-        
-        const updatedTodos = TodoService.getTodos();
-        setTodos(updatedTodos);
+        TodoService.getTodos()
+        .then((updatedTodos) => {
+                setTodos(updatedTodos);
+            });
     }
 
 
 
     function addTodo(payload: ITodo): void {
         
-        TodoService.addTodo(payload);
-        refreshTodo();
+        TodoService.addTodo(payload)
+            .then(() => refreshTodo());
     }
 
 
@@ -61,16 +70,27 @@ export function NewApp() {
 
     function toggleTodo(id:string, completed:boolean) {
         
-        TodoService.toggleTodo(id, completed);
-        refreshTodo();
+        TodoService.toggleTodo(id, completed)
+            .then(() => refreshTodo());
     }
+
+
+    useEffect(() => {
+        (async () => {
+            const todos = await TodoService.getTodos();
+            setTodos(todos);
+        })();
+        console.log("useEffect");
+    }, []);
 
 
 
     return (
-        <div>
+        <div className="todo">
+            <TodoListContext.Provider value={TodoListContextValue}>
+                <TodoList todoItems={todos}  />
+            </TodoListContext.Provider>
             <TodoForm saveTodo={saveTodo} ref={todoFormRef} />
-            <TodoList todoItems={todos} removeTodo={removeTodo} toggleTodo={toggleTodo} />
         </div>
     );
 }

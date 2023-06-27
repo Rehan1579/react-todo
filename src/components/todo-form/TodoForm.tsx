@@ -1,9 +1,45 @@
-import { FormEvent, forwardRef, useImperativeHandle, useState } from "react";
-import { ITodo } from "../../data-models/ITodo";
+import { ChangeEvent, FormEvent, forwardRef, useImperativeHandle, useState } from "react";
+import { ITodo } from "../../data-models/interfaces/ITodo";
+import styled from 'styled-components';
 
-export const TodoForm = forwardRef((props: any, ref) => {
+
+interface Props {
+    saveTodo(todo: ITodo): void;
+}
+
+
+const FormInput = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    
+
+    input {
+        padding: 4px 8px;
+        height: 32px;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        outline: 2px solid transparrent;
+        flex-grow: 1;
+
+        &:focus {
+            outline: 2px solid #ccc;
+        }
+    }
+
+
+    &.invalid input {
+        outline: 2px solid maroon;
+    }
+`;
+
+
+export const TodoForm = forwardRef((props: Props, ref) => {
+
     const {saveTodo} = props;
     const [title, setTitle] = useState<string>("");
+    const [isValid, setIsValid] = useState<boolean>(true);
 
 
 
@@ -18,6 +54,7 @@ export const TodoForm = forwardRef((props: any, ref) => {
         e.preventDefault();
         if(!title.trim())
         {
+            setIsValid(false);
             return;
         }
 
@@ -36,14 +73,29 @@ export const TodoForm = forwardRef((props: any, ref) => {
     useImperativeHandle(ref, () => ({
         resetForm: resetForm
     }));
+
+
+
+    function onChangeTitle(event: ChangeEvent<HTMLInputElement>) {
+
+        let val = event.target.value;
+        if(!!val)
+        {
+            setIsValid(true);
+        }
+
+
+        setTitle(val);
+    }
     
 
 
     return (
-        <form onSubmit={submitForm}>
-            <label htmlFor="title">Title</label>
-            <input type="text" id="title" required value={title} onChange={(e) => setTitle(e.target.value)}></input>
-            <button type="submit" disabled={!title}>Add</button>
+        <form onSubmit={submitForm} style={{margin: "12px"}}>
+            <FormInput className={!isValid && 'invalid'}>
+                <input placeholder="Add Your Todo" type="text" id="title" required value={title} onChange={onChangeTitle}></input>
+                <button type="submit" disabled={!title}>Add</button>
+            </FormInput>
         </form>
     );
 });
