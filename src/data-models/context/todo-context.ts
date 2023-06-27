@@ -1,4 +1,4 @@
-import { createContext, useContext } from "react";
+import { createContext } from "react";
 
 
 
@@ -17,14 +17,12 @@ export const TodoContextController = (() => {
 
 
     function initializeContext() {
-        
-        console.log("Initializing Todo context...");
         return createContext(undefined);
     }
 
 
 
-    function provideContext() {
+    function getContext() {
 
         if (!context)
         {
@@ -35,22 +33,6 @@ export const TodoContextController = (() => {
 
 
     return {
-        provideContext
+        getContext,
     };
 })();
-
-
-
-export function useTodoContext(): ITodoListContextValue {
-    const contextInstance = TodoContextController.provideContext();
-    const contextValue = useContext(contextInstance);
-  
-    if (!contextValue)
-    {
-      throw new Error(
-        "Todo context is not available. Make sure to provide the context using TodoContextProvider."
-      );
-    }
-  
-    return contextValue;
-  }
