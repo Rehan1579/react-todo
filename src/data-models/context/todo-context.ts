@@ -2,8 +2,8 @@ import { createContext } from "react";
 
 
 
-export interface ITodoListContextValue {
-    Provider?: React.Provider<ITodoListContextValue>;
+export interface ITodoListContext {
+    Provider?: React.Provider<ITodoListContext>;
     removeTodo(id: string): void;
     toggleTodo(id: string, completed: boolean): void;
 }
@@ -12,7 +12,7 @@ export interface ITodoListContextValue {
 
 export const TodoContextController = (() => {
 
-    let context: React.Context<ITodoListContextValue> | undefined;
+    let context: React.Context<ITodoListContext> | undefined;
 
 
 
